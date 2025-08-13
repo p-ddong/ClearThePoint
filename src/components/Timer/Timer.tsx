@@ -19,7 +19,7 @@ const Timer = ({ isStart, timer, setTimer }: Props) => {
   }, [isStart]);
 
   return (
-    <div className="play_time flex flex-col justify-center items-center pr-4">
+    <div className="flex flex-col justify-center items-center pr-8">
       <div>Time:</div>
       <div className="flex items-end">
         <div className="text-7xl">{(timer / 1000).toFixed(2)}</div>

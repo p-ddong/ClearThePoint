@@ -1,9 +1,10 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import Timer from "@/components/Timer";
 import type { GameInput } from "@/types/types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import chiikawa from "@/assets/chiikawa.gif";
+import PlayGround from "@/components/PlayGround";
+import HowToPlay from "@/components/HowToPlay";
 
 const MainPage = () => {
   const {
@@ -11,9 +12,10 @@ const MainPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<GameInput>();
-
+  const playgroundRef = useRef<HTMLDivElement>(null);
   const [timer, setTimer] = useState<number>(0);
-//   const [isWin, setIsWin] = useState<boolean>(false);
+  const [isWin, setIsWin] = useState<boolean>(false);
+  const [point,setPoint] = useState<number>(0)
   const [autoPlay, setAutoPlay] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
   const [currentNumber, setCurrentNumber] = useState<number>(0);
@@ -22,8 +24,7 @@ const MainPage = () => {
   );
 
   const onSubmit: SubmitHandler<GameInput> = (data) => {
-    console.log(currentNumber)
-    console.log(data)
+    setPoint(data.point)
     setIsStart(true);
     setCurrentNumber(1);
   };
@@ -40,7 +41,7 @@ const MainPage = () => {
               <div>
                 <label className="block mb-1">Difficulty:</label>
                 <div className="flex flex-col gap-1">
-                  <label className="flex items-center gap-2">
+                  <label className="flex items-center w-fit gap-2 cursor-none cursor-target">
                     <input
                       type="radio"
                       value="easy"
@@ -50,7 +51,7 @@ const MainPage = () => {
                     Easy
                   </label>
 
-                  <label className="flex items-center gap-2">
+                  <label className="flex items-center w-fit gap-2 cursor-none cursor-target">
                     <input
                       type="radio"
                       value="normal"
@@ -60,7 +61,7 @@ const MainPage = () => {
                     Normal
                   </label>
 
-                  <label className="flex items-center gap-2">
+                  <label className="flex items-center w-fit gap-2 cursor-none cursor-target">
                     <input
                       type="radio"
                       value="hard"
@@ -116,7 +117,9 @@ const MainPage = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setIsStart(false), setTimer(0);
+                        setIsStart(false);
+                        setTimer(0);
+                        setAutoPlay(false);
                       }}
                       className="bg-none border-[1px] p-2 pt-0.5 pb-0.5 cursor-none cursor-target"
                     >
@@ -128,10 +131,17 @@ const MainPage = () => {
             </form>
           </div>
           <Timer timer={timer} setTimer={setTimer} isStart={isStart} />
-
-          <img className="mt-auto" src={chiikawa} alt="" />
+          <div className="play_time flex flex-col justify-center items-center pr-8 mt-5">
+            <div>Next number:</div>
+            <div className="text-7xl">{currentNumber}</div>
+          </div>
+          <HowToPlay />
+          {/* <img className="mt-auto" src={chiikawa} alt="" /> */}
         </div>
-        <div className="w-4/5 ml-1 border-[1px]"></div>
+
+        <div ref={playgroundRef}  className="w-4/5 ml-1 border-[1px]">
+          <PlayGround playgroundRef={playgroundRef} isStart={isStart} isWin={isWin} setIsWin={setIsWin} currentPoint={currentNumber} setCurrentPoint={setCurrentNumber} point={point} />
+        </div>
       </div>
     </div>
   );

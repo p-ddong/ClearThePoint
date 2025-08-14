@@ -118,7 +118,7 @@ const MainPage = () => {
                     >
                       Restart
                     </button>
-                    <button
+                    {/* <button
                       type="button"
                       onClick={() => setAutoPlay(!autoPlay)}
                       className={`bg-none border-[1px] p-2 pt-0.5 pb-0.5 cursor-none cursor-target ${
@@ -126,7 +126,7 @@ const MainPage = () => {
                       }`}
                     >
                       AutoPlay
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       onClick={() => {

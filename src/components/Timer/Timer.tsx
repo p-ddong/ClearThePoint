@@ -1,22 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Props {
   isStart: boolean;
-  timer: number;
-  setTimer: React.Dispatch<React.SetStateAction<number>>;
+  timerState: "start" | "pause" | "restart";
+  setTimerState: React.Dispatch<
+    React.SetStateAction<"start" | "pause" | "restart">
+  >;
 }
 
-const Timer = ({ isStart, timer, setTimer }: Props) => {
+const Timer = ({ timerState, isStart }: Props) => {
+  const [timer, setTimer] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<number>(0);
+
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isStart) {
-      const startTime = Date.now() - timer;
-      interval = setInterval(() => {
-        setTimer(Date.now() - startTime);
+    if (isStart && timerState === "start") {
+      startTimeRef.current = Date.now();
+      intervalRef.current = setInterval(() => {
+        setTimer(Date.now() - startTimeRef.current);
       }, 10);
     }
-    return () => clearInterval(interval);
-  }, [isStart]);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isStart, timerState]);
 
   return (
     <div className="flex flex-col justify-center items-center pr-8">

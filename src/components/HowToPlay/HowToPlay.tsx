@@ -20,10 +20,6 @@ const HowToPlay = () => {
             <div className="text-[.8rem]  mt-2 mb-5">
               If you <b>click out of order</b>, the game will <b>end</b>.
             </div>
-
-            <div className="text-[.8rem]  mt-2 mb-5">
-              The game <b>won't start</b> till you find out number <b>1</b>
-            </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

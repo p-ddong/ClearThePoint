@@ -13,9 +13,13 @@ const MainPage = () => {
     formState: { errors },
   } = useForm<GameInput>();
   const playgroundRef = useRef<HTMLDivElement>(null);
-  const [timer, setTimer] = useState<number>(0);
-  const [isWin, setIsWin] = useState<boolean>(false);
-  const [point,setPoint] = useState<number>(0)
+  const [timerState, setTimerState] = useState<"start" | "pause" | "restart">(
+    "pause"
+  );
+  const [gameStatus, setGameStatus] = useState<
+    "idle" | "running" | "win" | "lose"
+  >("idle");
+  const [point, setPoint] = useState<number>(0);
   const [autoPlay, setAutoPlay] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
   const [currentNumber, setCurrentNumber] = useState<number>(0);
@@ -24,9 +28,11 @@ const MainPage = () => {
   );
 
   const onSubmit: SubmitHandler<GameInput> = (data) => {
-    setPoint(data.point)
-    setIsStart(true);
+    setTimerState("start");
+    setPoint(data.point);
     setCurrentNumber(1);
+    setGameStatus("running");
+    setIsStart(true);
   };
 
   return (
@@ -38,6 +44,9 @@ const MainPage = () => {
           <h2 className="text-4xl mb-7">Clear The Points</h2>
           <div className="">
             <form className="flex flex-col gap-3">
+                <fieldset disabled={isStart} className="flex flex-col gap-3">
+
+  </fieldset>
               <div>
                 <label className="block mb-1">Difficulty:</label>
                 <div className="flex flex-col gap-1">
@@ -47,6 +56,7 @@ const MainPage = () => {
                       value="easy"
                       checked={difficulty === "easy"}
                       onChange={() => setDifficulty("easy")}
+                      disabled={isStart}
                     />
                     Easy
                   </label>
@@ -57,6 +67,7 @@ const MainPage = () => {
                       value="normal"
                       checked={difficulty === "normal"}
                       onChange={() => setDifficulty("normal")}
+                      disabled={isStart}
                     />
                     Normal
                   </label>
@@ -67,6 +78,7 @@ const MainPage = () => {
                       value="hard"
                       checked={difficulty === "hard"}
                       onChange={() => setDifficulty("hard")}
+                      disabled={isStart}
                     />
                     Hard
                   </label>
@@ -79,6 +91,7 @@ const MainPage = () => {
                   className="cursor-none cursor-target border-b-[1px]"
                   type="number"
                   {...register("point", { required: true, min: 2, max: 9999 })}
+                  disabled={isStart}
                 />
                 {errors.point && (
                   <div className="text-red-600">
@@ -100,7 +113,7 @@ const MainPage = () => {
                   <div className="flex gap-1">
                     <button
                       type="button"
-                      // onClick={() => setIsStart(false)}
+                      // onClick={() => setRestart(false)}
                       className="bg-none border-[1px] p-2 pt-0.5 pb-0.5 cursor-none cursor-target"
                     >
                       Restart
@@ -118,8 +131,9 @@ const MainPage = () => {
                       type="button"
                       onClick={() => {
                         setIsStart(false);
-                        setTimer(0);
+                        setTimerState("restart");
                         setAutoPlay(false);
+                        setGameStatus("idle");
                       }}
                       className="bg-none border-[1px] p-2 pt-0.5 pb-0.5 cursor-none cursor-target"
                     >
@@ -130,17 +144,30 @@ const MainPage = () => {
               </div>
             </form>
           </div>
-          <Timer timer={timer} setTimer={setTimer} isStart={isStart} />
+          <Timer
+            timerState={timerState}
+            setTimerState={setTimerState}
+            isStart={isStart}
+          />
           <div className="play_time flex flex-col justify-center items-center pr-8 mt-5">
             <div>Next number:</div>
             <div className="text-7xl">{currentNumber}</div>
           </div>
           <HowToPlay />
-          {/* <img className="mt-auto" src={chiikawa} alt="" /> */}
         </div>
 
-        <div ref={playgroundRef}  className="w-4/5 ml-1 border-[1px]">
-          <PlayGround playgroundRef={playgroundRef} isStart={isStart} isWin={isWin} setIsWin={setIsWin} currentPoint={currentNumber} setCurrentPoint={setCurrentNumber} point={point} />
+        <div ref={playgroundRef} className="w-4/5 ml-1 border-[1px]">
+          <PlayGround
+            difficulty={difficulty}
+            playgroundRef={playgroundRef}
+            isStart={isStart}
+            gameStatus={gameStatus}
+            setGameStatus={setGameStatus}
+            currentPoint={currentNumber}
+            setCurrentPoint={setCurrentNumber}
+            point={point}
+            setIsStart={setIsStart}
+          />
         </div>
       </div>
     </div>

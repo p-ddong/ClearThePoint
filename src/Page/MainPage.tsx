@@ -20,7 +20,7 @@ const MainPage = () => {
     "idle" | "running" | "win" | "lose"
   >("idle");
   const [point, setPoint] = useState<number>(0);
-  const [autoPlay, setAutoPlay] = useState<boolean>(false);
+  // const [autoPlay, setAutoPlay] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
   const [currentNumber, setCurrentNumber] = useState<number>(0);
   const [difficulty, setDifficulty] = useState<"easy" | "normal" | "hard">(
@@ -132,7 +132,7 @@ const MainPage = () => {
                       onClick={() => {
                         setIsStart(false);
                         setTimerState("restart");
-                        setAutoPlay(false);
+                        // setAutoPlay(false);
                         setGameStatus("idle");
                       }}
                       className="bg-none border-[1px] p-2 pt-0.5 pb-0.5 cursor-none cursor-target"
